@@ -1,2 +1,2 @@
 # massimobot
-pe piacere io no volevo metterla pubblica
+pe piacere io non volevo metterla pubblica
