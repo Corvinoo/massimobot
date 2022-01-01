@@ -49,6 +49,63 @@ var timeNow = today.getMilliseconds;
 
 
 
+
+let suoniYoutube = [
+    {
+        'triggers': ['aha', 'hah'], // Triggeratori di eventi
+        'mode': 'substring', // substring || fullstring
+        'yt_link': 'https://www.youtube.com/watch?v=iYVO5bUFww0&ab_channel=HollywoodLaughTracks', 
+    },
+    {
+        'triggers': ['vai massimo'], // Triggeratori di eventi
+        'mode': 'substring', // substring || fullstring
+        'yt_link': 'https://www.youtube.com/watch?v=9t3qXXJSaKk&ab_channel=Codex', 
+    },
+
+
+]
+
+/**
+ * Test the triggers and eventually play a sound
+ */
+function test_sounds(msg_content_raw) {
+
+    const msg = msg_content_raw.content;
+
+    suoniYoutube.forEach(suoni => {
+        
+        if (suoni.mode == 'substring') {
+
+            if (suoni.triggers.some(trigger => msg.includes(trigger) ) ) {
+
+                // * Found substring
+
+                streamYT(suoni.yt_link);
+                return;
+
+            }
+
+        } else {
+
+            if (suoni.triggers.includes(msg) ) {
+    
+                // * Found fullstring
+
+                streamYT(suoni.yt_link);
+                return;
+
+            }
+
+        }
+
+        
+
+    });
+
+}
+
+
+
 client.on('messageCreate', async (msg) =>{
     if(!msg.author.bot){
         let connection
@@ -84,13 +141,9 @@ client.on('messageCreate', async (msg) =>{
         
         if(isTtsOn.get(msg.guild)){
 
-            if(msg.content.includes('vai massimo')){
-                streamYT('https://www.youtube.com/watch?v=9t3qXXJSaKk&ab_channel=Codex')
-            }
-            else if(msg.content.toLowerCase().includes('aha' || 'AHA' || 'HAH' || 'hah')){
-
-                streamYT('https://www.youtube.com/watch?v=iYVO5bUFww0&ab_channel=HollywoodLaughTracks')
-            }else{
+            if ( test_sounds(msg) ) {
+                console.log('Played sound')
+            } else {
                 tts(msg)
             }
         }
